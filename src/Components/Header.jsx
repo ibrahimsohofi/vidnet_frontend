@@ -76,7 +76,7 @@ function Header() {
       const fetchData = async () => {
         try {
           const response = await axios.get(
-            `https://0bcc-34-27-45-175.ngrok-free.app/video-info?url=${encodeURIComponent(
+            `https://3c79-34-27-45-175.ngrok-free.app/video-info?url=${encodeURIComponent(
               inputValue
             )}`,
             {
