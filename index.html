@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Downloader</title>
+</head>
+<body>
+  <h1>YouTube Downloader</h1>
+  <input type="text" id="videoUrl" placeholder="Enter YouTube video URL">
+  <button id="fetchInfo">Fetch Info</button>
+  <div id="videoDetails"></div>
+  <script>
+    const apiUrl = "http://localhost:5000";
+
+    document.getElementById("fetchInfo").addEventListener("click", async () => {
+      const videoUrl = document.getElementById("videoUrl").value;
+      if (!videoUrl) {
+        alert("Please enter a YouTube video URL.");
+        return;
+      }
+
+      const response = await fetch(`${apiUrl}/video-info?url=${encodeURIComponent(videoUrl)}`);
+      const data = await response.json();
+
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+
+      const videoDetailsDiv = document.getElementById("videoDetails");
+      videoDetailsDiv.innerHTML = `
+        <h2>${data.title}</h2>
+        <img src="${data.thumbnail}" alt="${data.title}" width="200">
+        <p>Duration: ${data.duration} seconds</p>
+        <h3>Available Formats</h3>
+        <table border="1">
+          <tr>
+            <th>Format ID</th>
+            <th>Resolution</th>
+            <th>File Size</th>
+            <th>Extension</th>
+            <th>Action</th>
+          </tr>
+          ${data.formats
+            .map(
+              (format) => `
+              <tr>
+                <td>${format.formatId}</td>
+                <td>${format.resolution}</td>
+                <td>${format.fileSize}</td>
+                <td>${format.ext}</td>
+                <td><button onclick="downloadFile('${videoUrl}', '${format.formatId}')">Download</button></td>
+              </tr>`
+            )
+            .join("")}
+        </table>
+      `;
+    });
+
+    async function downloadFile(videoUrl, formatId) {
+      const response = await fetch(
+        `${apiUrl}/download?url=${encodeURIComponent(videoUrl)}&formatId=${formatId}`
+      );
+      if (response.ok) {
+        const blob = await response.blob();
+        const a = document.createElement("a");
+        a.href = window.URL.createObjectURL(blob);
+        a.download = `download.${formatId}`;
+        a.click();
+      } else {
+        alert("Failed to download the file.");
+      }
+    }
+  </script>
+</body>
+</html>

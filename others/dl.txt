@@ -1,0 +1,71 @@
+   <h1
+        className="h-16 flex justify-center items-center text-gray-900 border-b-2 border-b-gray-200 w-fit
+       bg-gray-100 rounded-lg shadow-lg p-2 px-10  text-3xl font-bold m-3"
+      >
+        How to Download Videos in 3 Easy Steps
+      </h1>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ const handleDownload = async (videoQuality, isAudioActive, fileExtension, fileUrl) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/download?quality=${videoQuality}&audio=${isAudioActive}&extension=${fileExtension}&url=${encodeURIComponent(fileUrl)}`,
+        {
+          method: 'GET',
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error('Failed to start download');
+      }
+  
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let content = '';
+  
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+  
+        content += decoder.decode(value);
+        const lines = content.split('\n');
+        lines.forEach((line) => {
+          if (line.trim()) {
+            try {
+              const data = JSON.parse(line);
+              if (data.progress) {
+                console.log(`Progress: ${data.progress}`);
+                // Update progress UI (e.g., progress bar)
+                const progressElement = document.getElementById('progress');
+                if (progressElement) {
+                 
+                  setDlStatus(data.progress)
+                  
+                }
+              }
+  
+              if (data.message) {
+                console.log(data.message);
+                alert(data.message);
+              }
+            } catch (err) {
+              console.error('Error parsing line:', line);
+            }
+          }
+        });
+  
+        content = lines[lines.length - 1]; // Keep the last incomplete line (if any)
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      alert('An error occurred while downloading the video.');
+    }
+  };
