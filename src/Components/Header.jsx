@@ -7,6 +7,8 @@ import Error from "./Error";
 import DownloadCardSkeleton from "./DownloadCardSkeleton";
 import Faqs from "./Faqs";
 import axios from "axios";
+import dotenv from 'dotenv';
+dotenv.config();
 
 function Header() {
   const [inputValue, setInputValue] = useState("");
@@ -76,7 +78,7 @@ function Header() {
       const fetchData = async () => {
         try {
           const response = await axios.get(
-            `https://3c79-34-27-45-175.ngrok-free.app/video-info?url=${encodeURIComponent(
+            `${process.env.API}/video-info?url=${encodeURIComponent(
               inputValue
             )}`,
             {
