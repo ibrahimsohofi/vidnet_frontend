@@ -23,7 +23,7 @@ function HandleCoverInfo({ videoInfo }) {
 }
 async function handleDownloadCover(imgCover, imgTitle) {
   fetch(
-    `https://4f29-34-27-45-175.ngrok-free.app/dl?url=${encodeURIComponent(
+    `${process.env.REACT_APP_API}/dl?url=${encodeURIComponent(
       imgCover
     )}`,
     {

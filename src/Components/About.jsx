@@ -123,6 +123,15 @@ function AboutUs() {
           </div>
         </div>
       </section>
+      <section className=" border border-gray-500 rounded-md m-5 p-8">
+        <h1 className="text-6xl font-bold text-orange-600 font-Montserrat">
+          <span className="text-gray-800 font-semibold">Meet the team</span>
+        </h1>
+        
+        <div className="gap-5 flex flex-col h-full p-5 items-center">
+          
+        </div>
+      </section>
     </article>
   );
 }

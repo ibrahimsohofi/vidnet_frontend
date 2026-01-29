@@ -7,6 +7,7 @@ import Contact from './Components/Contact';
 import AboutUs from './Components/About'
 import Faqs from './Components/Faqs';
 import HowToUse from './Components/HowToUse';
+import DownloaderPage from './Components/DownloaderPage';
 
 
 
@@ -17,6 +18,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Header />} />
+          <Route path="downloader" element={<DownloaderPage />}/>
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/#faqs" element={<Faqs/>}/>
